@@ -1,6 +1,7 @@
 package kz.abcsoft.handlerdemo1;
 
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,21 +29,31 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         tvInfo = (TextView)findViewById(R.id.tvInfo) ;
+        btnStart = (Button)findViewById(R.id.btnStart) ;
+        h = new Handler(){
+            public void handleMessage(Message msg){
+                tvInfo.setText("Закачано файлов: " + msg.what) ;
+                if(msg.what == 10)
+                    btnStart.setEnabled(true);
+            }
+        } ;
     }
 
     public void onClick(View v){
         switch(v.getId()){
             case R.id.btnStart:
+                btnStart.setEnabled(false);
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i = 1; i <= 10; i++){
-                            downloadFile() ;
-                            tvInfo.setText("Закачано файлов: " + i) ;
-                            Log.d(LOG_TAG, "Закачано файлов: " + i) ;
+                            downloadFile();
+                            h.sendEmptyMessage(i) ;
+                            Log.d(LOG_TAG, "i = " + i) ;
                         }
                     }
-                });
+                }) ;
+                t.start();
                 break ;
             case R.id.btnTest:
                 Log.d(LOG_TAG, "test");
