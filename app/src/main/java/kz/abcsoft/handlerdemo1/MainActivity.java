@@ -33,11 +33,16 @@ public class MainActivity extends ActionBarActivity {
     public void onClick(View v){
         switch(v.getId()){
             case R.id.btnStart:
-                for(int i = 1; i <= 10; i++){
-                    downloadFile() ;
-                    tvInfo.setText("Закачано файлов: " + i) ;
-                    Log.d(LOG_TAG, "Закачано файлов: " + i) ;
-                }
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i = 1; i <= 10; i++){
+                            downloadFile() ;
+                            tvInfo.setText("Закачано файлов: " + i) ;
+                            Log.d(LOG_TAG, "Закачано файлов: " + i) ;
+                        }
+                    }
+                });
                 break ;
             case R.id.btnTest:
                 Log.d(LOG_TAG, "test");
